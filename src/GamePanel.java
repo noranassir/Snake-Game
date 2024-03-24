@@ -89,10 +89,26 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
     public void checkCollision(){
+
+        //Checks snake head collision with snake body
         for(int i = bodyComponents - 1; i > 0; i--){
             if(x[0] == x[i] && y[0] == y[i]){
                 running = false;
             }
+        }
+
+        //Checks collisions of snake head with panel borders
+        if(x[0] < 0){
+            running=false;
+        }
+        if(x[0] > PANEL_WIDTH){
+            running=false;
+        }
+        if(y[0] < 0){
+            running=false;
+        }
+        if(y[0] > PANEL_HEIGHT){
+            running=false;
         }
     }
     public void checkFood(){
