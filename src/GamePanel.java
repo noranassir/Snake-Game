@@ -36,24 +36,33 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g){
 
-        //Draw food
-        int red = random.nextInt(256);
-        int green = random.nextInt(256);
-        int blue = random.nextInt(256);
-        Color randomColor = new Color(red, green, blue);
-        g.setColor(randomColor);
-        g.fillOval(foodX,foodY, COMPONENT_SIZE, COMPONENT_SIZE);
+        if(running) {
 
-        //Draw snake
-        for(int i = 0; i < bodyComponents; i++){
-            if(i == 0){
-                g.setColor(Color.green);
-                g.fillRect(x[i],y[i], COMPONENT_SIZE, COMPONENT_SIZE);
+            //Draw food
+            int red = random.nextInt(256);
+            int green = random.nextInt(256);
+            int blue = random.nextInt(256);
+            Color randomColor = new Color(red, green, blue);
+            g.setColor(randomColor);
+            g.fillOval(foodX, foodY, COMPONENT_SIZE, COMPONENT_SIZE);
+
+            //Draw snake
+            for (int i = 0; i < bodyComponents; i++) {
+                if (i == 0) {
+                    g.setColor(Color.green);
+                    g.fillRect(x[i], y[i], COMPONENT_SIZE, COMPONENT_SIZE);
+                } else {
+                    g.setColor(new Color(128, 255, 0));
+                    g.fillRect(x[i], y[i], COMPONENT_SIZE, COMPONENT_SIZE);
+                }
             }
-            else {
-                g.setColor(new Color(128,255,0));
-                g.fillRect(x[i],y[i], COMPONENT_SIZE, COMPONENT_SIZE);
-            }
+            g.setColor(Color.white);
+            g.setFont(new Font("Jazz LET",Font.PLAIN, 15));
+            FontMetrics fontMetrics = getFontMetrics(g.getFont());
+            g.drawString("Score: " + eatenFood,PANEL_WIDTH - fontMetrics.stringWidth("Score: ") - 15, 15);
+        }
+        else{
+            gameOver(g);
         }
 
     }
@@ -124,7 +133,17 @@ public class GamePanel extends JPanel implements ActionListener {
         timer = new Timer(delay,this);
         timer.start();
     }
-    public void gameOver(){
+    public void gameOver(Graphics g){
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Jazz LET",Font.BOLD, 50));
+        FontMetrics fontMetrics1 = getFontMetrics(g.getFont());
+        g.drawString("Game Over",(PANEL_WIDTH - fontMetrics1.stringWidth("Game Over"))/2, PANEL_HEIGHT/2);
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Jazz LET",Font.BOLD, 25));
+        FontMetrics fontMetrics2 = getFontMetrics(g.getFont());
+        g.drawString("Score: " + eatenFood,(PANEL_WIDTH - fontMetrics2.stringWidth("Game Over"))/2, PANEL_HEIGHT/2 + fontMetrics1.getHeight() ) ;
 
     }
     public class AKeyAdapter extends KeyAdapter{
