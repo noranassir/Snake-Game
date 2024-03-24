@@ -21,35 +21,48 @@ public class GamePanel extends JPanel implements ActionListener {
     private int bodyComponents = 10;
     private char direction = 'R';
 
+    private int eatenFood = 0;
+
     Random random = new Random();
 
     GamePanel(){
         this.setPreferredSize(new Dimension(PANEL_WIDTH,PANEL_HEIGHT));
         this.setBackground(Color.black);
         this.addKeyListener(new AKeyAdapter());
+        this.setFocusable(true); // Allow the panel to receive keyboard input
+        this.requestFocusInWindow(); // Request focus for the panel
         startGame();
     }
 
     public void draw(Graphics g){
 
-        //draw food
-        int red = random.nextInt(256);
-        int green = random.nextInt(256);
-        int blue = random.nextInt(256);
-        Color randomColor = new Color(red, green, blue);
-        g.setColor(randomColor);
-        g.fillOval(foodX,foodY, COMPONENT_SIZE, COMPONENT_SIZE);
+        if(running) {
 
-        //draw body
-        for(int i = 0; i < bodyComponents; i++){
-            if(i == 0){
-                g.setColor(Color.green);
-                g.fillRect(x[i],y[i], COMPONENT_SIZE, COMPONENT_SIZE);
+            //Draw food
+            int red = random.nextInt(256);
+            int green = random.nextInt(256);
+            int blue = random.nextInt(256);
+            Color randomColor = new Color(red, green, blue);
+            g.setColor(randomColor);
+            g.fillOval(foodX, foodY, COMPONENT_SIZE, COMPONENT_SIZE);
+
+            //Draw snake
+            for (int i = 0; i < bodyComponents; i++) {
+                if (i == 0) {
+                    g.setColor(Color.green);
+                    g.fillRect(x[i], y[i], COMPONENT_SIZE, COMPONENT_SIZE);
+                } else {
+                    g.setColor(new Color(128, 255, 0));
+                    g.fillRect(x[i], y[i], COMPONENT_SIZE, COMPONENT_SIZE);
+                }
             }
-            else {
-                g.setColor(new Color(128,255,0));
-                g.fillRect(x[i],y[i], COMPONENT_SIZE, COMPONENT_SIZE);
-            }
+            g.setColor(Color.white);
+            g.setFont(new Font("Jazz LET",Font.PLAIN, 15));
+            FontMetrics fontMetrics = getFontMetrics(g.getFont());
+            g.drawString("Score: " + eatenFood,PANEL_WIDTH - fontMetrics.stringWidth("Score: ") - 15, 15);
+        }
+        else{
+            gameOver(g);
         }
 
     }
@@ -86,9 +99,33 @@ public class GamePanel extends JPanel implements ActionListener {
     }
     public void checkCollision(){
 
+        //Checks snake head collision with snake body
+        for(int i = bodyComponents - 1; i > 0; i--){
+            if(x[0] == x[i] && y[0] == y[i]){
+                running = false;
+            }
+        }
+
+        //Checks collisions of snake head with panel borders
+        if(x[0] < 0){
+            running=false;
+        }
+        if(x[0] > PANEL_WIDTH){
+            running=false;
+        }
+        if(y[0] < 0){
+            running=false;
+        }
+        if(y[0] > PANEL_HEIGHT){
+            running=false;
+        }
     }
     public void checkFood(){
-
+        if(x[0] == foodX && y[0] == foodY){
+            bodyComponents++;
+            eatenFood++;
+            generateFood();
+        }
     }
     public void startGame(){
         generateFood();
@@ -96,12 +133,44 @@ public class GamePanel extends JPanel implements ActionListener {
         timer = new Timer(delay,this);
         timer.start();
     }
-    public void gameOver(){
+    public void gameOver(Graphics g){
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Jazz LET",Font.BOLD, 50));
+        FontMetrics fontMetrics1 = getFontMetrics(g.getFont());
+        g.drawString("Game Over",(PANEL_WIDTH - fontMetrics1.stringWidth("Game Over"))/2, PANEL_HEIGHT/2);
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Jazz LET",Font.BOLD, 25));
+        FontMetrics fontMetrics2 = getFontMetrics(g.getFont());
+        g.drawString("Score: " + eatenFood,(PANEL_WIDTH - fontMetrics2.stringWidth("Game Over"))/2, PANEL_HEIGHT/2 + fontMetrics1.getHeight() ) ;
 
     }
     public class AKeyAdapter extends KeyAdapter{
-        public void pressedKey(KeyEvent event){
-
+        @Override
+        public void keyPressed(KeyEvent event){
+            switch (event.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    if(direction != 'R'){
+                        direction = 'L';
+                    }
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    if(direction != 'L'){
+                        direction = 'R';
+                    }
+                    break;
+                case KeyEvent.VK_UP:
+                    if(direction != 'D'){
+                        direction = 'U';
+                    }
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if(direction != 'U'){
+                        direction = 'D';
+                    }
+                    break;
+            }
         }
     }
 
