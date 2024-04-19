@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
-// Constants for panel dimensions and component size
+    // Constants for panel dimensions and component size
     private static final int PANEL_WIDTH = 500;
     private static final int PANEL_HEIGHT = 500;
     private static final int COMPONENT_SIZE = 10;
@@ -100,17 +100,17 @@ public class GamePanel extends JPanel implements ActionListener {
         draw(g);
     }
 
-   /**
-    * Generates food at random coordinates within the panel.
-    */
+    /**
+     * Generates food at random coordinates within the panel.
+     */
     public void generateFood(){
         foodX = random.nextInt(PANEL_WIDTH/COMPONENT_SIZE) * COMPONENT_SIZE;
         foodY = random.nextInt(PANEL_HEIGHT/COMPONENT_SIZE) * COMPONENT_SIZE;
     }
 
-   /**
-    * Moves the snake by updating its coordinates based on the current direction.
-    */
+    /**
+     * Moves the snake by updating its coordinates based on the current direction.
+     */
     public void move(){
         for(int i = bodyComponents - 1; i > 0; i--){
             x[i] = x[i-1];
@@ -133,9 +133,9 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-   /**
-    * Checks for collisions with the snake's body and panel borders.
-    */
+    /**
+     * Checks for collisions with the snake's body and panel borders.
+     */
     public void checkCollision(){
         for(int i = bodyComponents - 1; i > 0; i--){
             if(x[0] == x[i] && y[0] == y[i]){
@@ -157,9 +157,9 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
         
-   /**
+    /**
     * Checks if the snake has eaten food, and updates the game state accordingly.
-    */
+     */
     public void checkFood(){
         if(x[0] == foodX && y[0] == foodY){
             bodyComponents++;
@@ -168,19 +168,19 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
     
-   /**
-    * Starts the game by initializing food position and starting the timer.
-    */
+    /**
+     * Starts the game by initializing food position and starting the timer.
+     */
     public void startGame(){
         generateFood();
         running = true;
         timer = new Timer(delay,this);
         timer.start();
     }
-   /**
-    * Displays the game over screen.
-    * @param g The Graphics object used for drawing.
-    */
+    /**
+     * Displays the game over screen.
+     * @param g The Graphics object used for drawing.
+     */
     public void gameOver(Graphics g){
 
         g.setColor(Color.white);
@@ -195,9 +195,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     
-   /**
-    * Key adapter for handling keyboard input.
-    */
+    /**
+     * Key adapter for handling keyboard input.
+     */
     public class AKeyAdapter extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent event){
@@ -226,10 +226,10 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-   /**
-    * Handles the game loop by moving the snake and checking game conditions.
-    * @param e The ActionEvent triggered by the timer.
-    */
+    /**
+     * Handles the game loop by moving the snake and checking game conditions.
+     * @param e The ActionEvent triggered by the timer.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if(running){
